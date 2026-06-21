@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Bank Account System</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+
+background:linear-gradient(#3f5c8a);
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:30px;
+
+}
+
+.container{
+
+width:1000px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:25px;
+
+}
+
+.left{
+
+background:white;
+padding:30px;
+border-radius:20px;
+box-shadow:0 10px 25px rgba(0,0,0,.2);
+
+}
+
+.right{
+
+background:white;
+padding:30px;
+border-radius:20px;
+box-shadow:0 10px 25px rgba(0,0,0,.2);
+
+}
+
+h1{
+
+text-align:center;
+margin-bottom:20px;
+color:#444;
+
+}
+
+.balanceCard{
+
+background:linear-gradient(45deg,#609543,#398a33);
+padding:25px;
+border-radius:15px;
+color:white;
+text-align:center;
+margin-bottom:25px;
+
+}
+
+.balanceCard h2{
+
+font-size:40px;
+margin-top:10px;
+
+}
+
+label{
+
+display:block;
+margin-top:15px;
+font-weight:bold;
+
+}
+
+input{
+
+width:100%;
+padding:12px;
+margin-top:8px;
+border-radius:8px;
+border:1px solid gray;
+font-size:18px;
+
+}
+
+button{
+
+width:100%;
+padding:14px;
+margin-top:15px;
+border:none;
+border-radius:10px;
+font-size:18px;
+color:white;
+cursor:pointer;
+transition:.3s;
+
+}
+
+.deposit{
+
+background:#0087b8;
+
+}
+
+.deposit:hover{
+
+background:#009970;
+
+}
+
+.withdraw{
+
+background:#e74c3c;
+
+}
+
+.withdraw:hover{
+
+background:#b53f32;
+
+}
+
+.balance{
+
+background:#497c76;
+
+}
+
+.balance:hover{
+
+background:#0764a9;
+
+}
+
+.reset{
+
+background:#8682a7;
+
+}
+
+.reset:hover{
+
+background:#b4a9eb;
+
+}
+
+#message{
+
+margin-top:15px;
+font-weight:bold;
+text-align:center;
+font-size:18px;
+
+}
+
+.right h2{
+
+margin-bottom:15px;
+
+}
+
+table{
+
+width:100%;
+border-collapse:collapse;
+
+}
+
+table th{
+
+background:#564e93;
+color:white;
+padding:12px;
+
+}
+
+table td{
+
+padding:10px;
+text-align:center;
+border-bottom:1px solid #ddd;
+
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<div class="left">
+
+<h1>🏦 Bank Account</h1>
+
+<div class="balanceCard">
+
+<h3>Current Balance</h3>
+
+<h2 id="balance">Rs 0</h2>
+
+</div>
+
+<label>Enter Amount</label>
+
+<input type="number" id="amount" placeholder="Enter Amount">
+
+<button class="deposit" onclick="depositMoney()">
+Deposit
+</button>
+
+<button class="withdraw" onclick="withdrawMoney()">
+Withdraw
+</button>
+
+<button class="balance" onclick="showBalance()">
+Check Balance
+</button>
+
+<button class="reset" onclick="clearHistory()">
+Clear History
+</button>
+
+<p id="message"></p>
+
+</div>
+
+<div class="right">
+
+<h2>Transaction History</h2>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Date</th>
+<th>Type</th>
+<th>Amount</th>
+<th>Balance</th>
+
+</tr>
+
+</thead>
+
+<tbody id="history">
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<script>
+
+class BankAccount{
+
+constructor(balance){
+
+this.balance=balance;
+
+}
+
+deposit(amount){
+
+this.balance+=amount;
+
+return this.balance;
+
+}
+
+withdraw(amount){
+
+if(amount>this.balance){
+
+return false;
+
+}
+
+this.balance-=amount;
+
+return this.balance;
+
+}
+
+checkBalance(){
+
+return this.balance;
+
+}
+
+}
+
+let account=new BankAccount(0);
+
+function updateBalance(){
+
+document.getElementById("balance").innerHTML="Rs "+account.checkBalance();
+
+}
+
+function addHistory(type,amount){
+
+let row=document.createElement("tr");
+
+let date=new Date().toLocaleString();
+
+row.innerHTML=`
+
+<td>${date}</td>
+
+<td>${type}</td>
+
+<td>Rs ${amount}</td>
+
+<td>Rs ${account.checkBalance()}</td>
+
+`;
+
+document.getElementById("history").prepend(row);
+
+}
+
+function depositMoney(){
+
+let amount=Number(document.getElementById("amount").value);
+
+if(amount<=0){
+
+message.innerHTML="Enter Valid Amount";
+
+message.style.color="red";
+
+return;
+
+}
+
+account.deposit(amount);
+
+updateBalance();
+
+addHistory("Deposit",amount);
+
+message.innerHTML="Deposit Successful";
+
+message.style.color="green";
+
+amount.value="";
+
+}
+
+function withdrawMoney(){
+
+let amount=Number(document.getElementById("amount").value);
+
+if(amount<=0){
+
+message.innerHTML="Enter Valid Amount";
+
+message.style.color="red";
+
+return;
+
+}
+
+let result=account.withdraw(amount);
+
+if(result===false){
+
+message.innerHTML="Insufficient Balance";
+
+message.style.color="red";
+
+return;
+
+}
+
+updateBalance();
+
+addHistory("Withdraw",amount);
+
+message.innerHTML="Withdrawal Successful";
+
+message.style.color="green";
+
+}
+
+function showBalance(){
+
+alert("Current Balance : Rs "+account.checkBalance());
+
+}
+
+function clearHistory(){
+
+document.getElementById("history").innerHTML="";
+
+message.innerHTML="History Cleared";
+
+message.style.color="blue";
+
+}
+
+updateBalance();
+
+</script>
+
+</body>
+</html>
