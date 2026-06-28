@@ -44,3 +44,7 @@ Each account has:
 .withdraw(amount)
 
 .getBalance()
+
+📌 Conclusion
+This Bank Account System project built with JavaScript effectively shows how real-world banking operations such as depositing, withdrawing, and checking balance.
+Overall, it is a useful beginner-level project for strengthening JavaScript skills and understanding core programming principles in a real-world context.
